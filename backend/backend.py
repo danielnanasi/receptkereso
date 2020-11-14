@@ -4,6 +4,8 @@ import requests
 from flask import Flask
 app = Flask(__name__)
 
+spooncalcular_api_key="apiKey=55c3167293d4431289eb466abf605bb4"
+
 @app.route('/')
 def hello_world():
     return "Awsome receptkereső API \n developed by CSAPAT-6 \n Internet szolgáltatások és alkalmazások házi feladataként \n 2020 ősz"
@@ -12,7 +14,7 @@ def hello_world():
 def spooncalcular_search(query_string, vega=False, glutenmentes=False, cukormentes=False):
     # spooncalular api doksi: https://spoonacular.com/food-api/docs#Search-Recipes-Complex
 
-    query = "&query=" + query_string.replace(' ', ',')
+    query = "&query=" + str(query_string.replace(' ', ','))
     special=""
     if vega:
         special="&diet=vegetarian"
@@ -20,6 +22,22 @@ def spooncalcular_search(query_string, vega=False, glutenmentes=False, cukorment
         special="&intolerance=gluten"
     if cukormentes:
         special="&intolerance=sugar"
-    response = requests.get("https://api.spoonacular.com/recipes/complexSearch?apiKey=a25b3cc5960d454a8f90037209582963"+query+special )
-    
+    response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special )
+
     return response.text
+
+
+@app.route('/detail/<object_id>')
+def spooncalcular_detail(object_id):
+
+    response = requests.get("https://api.spoonacular.com/recipes/"+str(object_id)+"/information?"+spooncalcular_api_key+"&includeNutrition=true")
+
+    return response.text
+
+@app.route('/search_ingredient/<ingredients>')
+def spooncalcular_search_ingredint(ingredients):
+
+    response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+
+    return response.text
+
