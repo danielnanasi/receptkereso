@@ -6,6 +6,7 @@ import Select from '@material-ui/core/Select';
 import NativeSelect from '@material-ui/core/NativeSelect';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl'
+import Checkbox1 from './Checkbox'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -13,6 +14,7 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(1),
       marginLeft: 55,
       marginTop: 20,
+      marginBottom: 20,
       width: '25ch',
     },
   },
@@ -22,32 +24,44 @@ export default function SearchFields() {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    
     dish: '',
+    allergene:'',
+    searchInput: '',
+    response: null,
   });
+  console.log(state.dish)
+  console.log(state.allergene)
+  console.log(state.searchInput)
 
-  const handleChange = (event) => {
-    const dish = event.target.name;
+  const handleChange = (event) => { 
+    const name = event.target.name;
     setState({
       ...state,
-      [dish]: event.target.value,
+      [name]: event.target.value,
+      
     });
   };
+
+  
+    
+  
 
   return (
     <form className={classes.root} noValidate autoComplete="off">
       
-      <TextField id="standard-basic" label="Search" />
+      <TextField id="searchField" label="Search"  onChange={handleChange} value={TextField.Text} inputProps={{
+            name: 'searchInput',
+          }}/>
       
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="age-native-simple">Ételek</InputLabel>
+      <FormControl className={classes.formControl} >
+        <InputLabel htmlFor="dish">Ételek</InputLabel>
         <Select
           native
-          value={state.age}
+          value={state.dish}
           onChange={handleChange}
           inputProps={{
             name: 'dish',
-            id: 'age-native-simple',
+            id: 'dish',
           }}
         >
           <option aria-label="None" value="" />
@@ -55,10 +69,38 @@ export default function SearchFields() {
           <option value={"main"}>Főétel</option>
           <option value={"dessert"}>Desszert</option>
         </Select>
+        </FormControl>
+
+        <FormControl className={classes.formControl} >
+        <InputLabel htmlFor="allergene">Allergének</InputLabel>
+        <Select
+          native
+          value={state.allergene}
+          onChange={handleChange}
+          inputProps={{
+            name: 'allergene',
+            id: 'allergene',
+          }}
+        >
+          <option aria-label="None" value="" />
+          <option value={"vega"}>Vegetáriánus</option>
+          <option value={"gluten"}>Gluténmentes</option>
+          <option value={"sugar"}>Cukormentes</option>
+        </Select>
       </FormControl>
+
+      <Checkbox1/>
      
 
-      <Button style={{width: 40, marginTop:35}} color="primary">Search</Button>
+      <Button style={{width: 40, marginTop:35}} color="primary" onClick={() => { 
+          console.log(state.searchInput)
+          fetch("http://localhost:5000/search/" + state.searchInput)
+            .then((response) => {return response.json()})
+            .then((json) => {
+            setState({response: json})
+          });
+          console.log(state.response)
+       }}>Search</Button>
       
     </form>
   );
