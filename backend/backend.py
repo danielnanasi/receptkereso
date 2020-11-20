@@ -50,9 +50,30 @@ def spooncalcular_detail(object_id):
     return response.text
 
 @app.route('/search_ingredient/<ingredients>')
-def spooncalcular_search_ingredint(ingredients):
+def spooncalcular_search_ingredients(ingredients):
 
     response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
 
     return response.text
 
+
+
+################################################################################################
+# edama doksi: https://developer.edamam.com/edamam-docs-recipe-api
+
+edamam_ids = (
+    ('app_id', '57326fe9'),
+    ('app_key', '6a59155eecd222e3dd4099f45d51a769'),
+)
+
+
+@app.route('/edamam/search_recipe/<name>')
+def edamam_auto_complete(name):
+    params = (
+        ("q", name),
+        ("from", "0"),
+        ("to", "10"),
+    ) + edamam_ids
+
+    response = requests.get('https://api.edamam.com/search', params = params)
+    return response.json()
