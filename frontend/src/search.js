@@ -13,16 +13,16 @@ import { withStyles, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles({
   table: {
+    
     minWidth: 600,
     marginLeft: 50,
   },
-  
-  
   
 });
 
 const StyledTableCell = withStyles((theme) => ({
     head: {
+      
       backgroundColor: theme.palette.common.black,
       color: theme.palette.common.white,
     },
@@ -47,6 +47,8 @@ const rows = [
 export default function BasicTable() {
   const classes = useStyles();
 
+  
+
   return (
      
     <TableContainer component={Paper}>
@@ -58,8 +60,9 @@ export default function BasicTable() {
         <div> 
             <SearchFields />
         </div> 
+      
       <Table className={classes.table} aria-label="simple table">
-        <TableHead>
+        <TableHead >
           <TableRow>
             <StyledTableCell>Dessert (100g serving)</StyledTableCell>
             <StyledTableCell align="right">Calories</StyledTableCell>
@@ -82,6 +85,7 @@ export default function BasicTable() {
           ))}
         </TableBody>
       </Table>
+    
     </TableContainer>
   );
 }
