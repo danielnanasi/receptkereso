@@ -2,7 +2,10 @@
 
 import requests
 from flask import Flask
+from flask_cors import CORS
+
 app = Flask(__name__)
+CORS(app)
 
 spooncalcular_api_key="apiKey=55c3167293d4431289eb466abf605bb4"
 
