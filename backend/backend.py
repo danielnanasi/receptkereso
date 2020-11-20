@@ -15,31 +15,24 @@ def hello_world():
     return "Awsome receptkereső API \n developed by CSAPAT-6 \n Internet szolgáltatások és alkalmazások házi feladataként \n 2020 ősz"
 
 @app.route('/search/<query_string>/<options>')
-def spooncalcular_search(query_string, options="000000"):
+def spooncalcular_search(query_string, options="00"):
     # spooncalular api doksi: https://spoonacular.com/food-api/docs#Search-Recipes-Complex
-    vega=options[0]
-    glutenmentes=options[1]
-    cukormentes=options[2]
-
-    leves=options[3]
-    foetel=options[4]
-    desszert=options[5]
     
     query = "&query=" + str(query_string.replace(' ', ','))
     special=""
-    if vega:
+    if options[0] == 0:
         special="&diet=vegetarian"
-    if glutenmentes:
+    if options[0] == 1:
         special="&intolerance=gluten"
-    if cukormentes:
+    if options[0] == 2:
         special="&intolerance=sugar"
     
     meal_type=""
-    if leves:
+    if options[1] == 0:
         meal_type="&type=soup"
-    if foetel:
+    if options[1] == 1:
         meal_type="&type=main%20course"
-    if desszert:
+    if options[1] == 2:
         meal_type="&type=dessert"
 
     spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type )
