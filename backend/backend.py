@@ -1,6 +1,8 @@
 #!/usr/bin/python3.8
 
 import requests
+import json
+import traceback
 from flask import Flask
 from flask_cors import CORS
 
@@ -12,14 +14,26 @@ spooncalcular_api_key="apiKey=55c3167293d4431289eb466abf605bb4"
 
 @app.route('/')
 def hello_world():
-    return "Awsome receptkereső API \n developed by CSAPAT-6 \n Internet szolgáltatások és alkalmazások házi feladataként \n 2020 ősz"
+    return """Awsome receptkereső API
+            developed by CSAPAT-6
+            Internet szolgáltatások és alkalmazások házi feladataként
+            2020 ősz
+            source code: https://github.com/nanasidaniel/receptkereso"""
+
+edamam_ids = (
+    ('app_id', '57326fe9'),
+    ('app_key', '6a59155eecd222e3dd4099f45d51a769'),
+)
 
 @app.route('/search/<query_string>/<options>')
 def spooncalcular_search(query_string, options="00"):
     # spooncalular api doksi: https://spoonacular.com/food-api/docs#Search-Recipes-Complex
     
+    response_data = {'results':[]}
+
     query = "&query=" + str(query_string.replace(' ', ','))
     special=""
+    edmam_health_labels=""
     if options[0] == 0:
         special="&diet=vegetarian"
     if options[0] == 1:
@@ -35,9 +49,43 @@ def spooncalcular_search(query_string, options="00"):
     if options[1] == 2:
         meal_type="&type=dessert"
 
-    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type )
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number=20" )
+    spooncacular_response_data = json.loads(spooncacular_response.text)
 
-    return spooncacular_response.text 
+    params = (
+        ("q", query_string),
+        ("from", "0"),
+        ("to", "20"),
+    ) + edamam_ids
+
+    edamam_response = requests.get('https://api.edamam.com/search', params = params)
+    edamam_response_data = json.loads(edamam_response.text)
+
+    print(spooncacular_response_data)
+    #try:
+    getlink = True
+    for recipe in spooncacular_response_data['results']:
+        if getlink:
+            recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true")
+            recipe_json = json.loads(recipe_info.text)
+            recipe['link'] = recipe_json['sourceUrl']
+            getlink = False
+        else:
+            recipe['link'] = ""
+        response_data['results'].append(recipe)
+    for recipe in edamam_response_data['hits']:
+        edamam_recipe = {}
+        edamam_recipe['link'] = recipe['recipe']['url']
+        edamam_recipe['id'] = 0
+        edamam_recipe['title'] = recipe['recipe']['label']
+        edamam_recipe['image'] = recipe['recipe']['image']
+        response_data['results'].append(edamam_recipe)
+
+    """except Exception as e:
+        print("ERROR: "+ str(e))
+        traceback.print_exc()"""
+    
+    return response_data
 
 @app.route('/detail/<object_id>')
 def spooncalcular_detail(object_id):
@@ -57,11 +105,6 @@ def spooncalcular_search_ingredients(ingredients):
 
 ################################################################################################
 # edama doksi: https://developer.edamam.com/edamam-docs-recipe-api
-
-edamam_ids = (
-    ('app_id', '57326fe9'),
-    ('app_key', '6a59155eecd222e3dd4099f45d51a769'),
-)
 
 
 @app.route('/edamam/search_recipe/<name>')
