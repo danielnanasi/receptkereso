@@ -45,7 +45,7 @@ def spooncalcular_search(query_string, options="00"):
     if options[1] == 0:
         meal_type="&type=soup"
     if options[1] == 1:
-        meal_type="&type=main%20course"
+        meal_type="&type=main course"
     if options[1] == 2:
         meal_type="&type=dessert"
 
@@ -61,29 +61,26 @@ def spooncalcular_search(query_string, options="00"):
     edamam_response = requests.get('https://api.edamam.com/search', params = params)
     edamam_response_data = json.loads(edamam_response.text)
 
-    print(spooncacular_response_data)
-    #try:
-    getlink = True
-    for recipe in spooncacular_response_data['results']:
-        if getlink:
-            recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true")
-            recipe_json = json.loads(recipe_info.text)
-            recipe['link'] = recipe_json['sourceUrl']
-            getlink = False
-        else:
-            recipe['link'] = ""
-        response_data['results'].append(recipe)
-    for recipe in edamam_response_data['hits']:
-        edamam_recipe = {}
-        edamam_recipe['link'] = recipe['recipe']['url']
-        edamam_recipe['id'] = 0
-        edamam_recipe['title'] = recipe['recipe']['label']
-        edamam_recipe['image'] = recipe['recipe']['image']
-        response_data['results'].append(edamam_recipe)
+    try:
+        for recipe in spooncacular_response_data['results']:
+            if True:
+                recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true")
+                recipe_json = json.loads(recipe_info.text)
+                recipe['link'] = recipe_json['sourceUrl']
+            else:
+                recipe['link'] = ""
+            response_data['results'].append(recipe)
+        for recipe in edamam_response_data['hits']:
+            edamam_recipe = {}
+            edamam_recipe['link'] = recipe['recipe']['url']
+            edamam_recipe['id'] = 0
+            edamam_recipe['title'] = recipe['recipe']['label']
+            edamam_recipe['image'] = recipe['recipe']['image']
+            response_data['results'].append(edamam_recipe)
 
-    """except Exception as e:
+    except Exception as e:
         print("ERROR: "+ str(e))
-        traceback.print_exc()"""
+        traceback.print_exc()
     
     return response_data
 
@@ -97,9 +94,24 @@ def spooncalcular_detail(object_id):
 @app.route('/search_ingredient/<ingredients>')
 def spooncalcular_search_ingredients(ingredients):
 
-    response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+    spooncacular_response_data = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+    response_data = {'results':[]}
 
-    return response.text
+    try:
+        for recipe in spooncacular_response_data['results']:
+            if True:
+                recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true" + "&number=40")
+                recipe_json = json.loads(recipe_info.text)
+                recipe['link'] = recipe_json['sourceUrl']
+            else:
+                recipe['link'] = ""
+            response_data['results'].append(recipe)
+
+    except Exception as e:
+        print("ERROR: "+ str(e))
+        traceback.print_exc()
+    
+    return response_data
 
 
 
