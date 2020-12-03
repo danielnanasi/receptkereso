@@ -48,6 +48,10 @@ def spooncalcular_search(query_string, options="00"):
         meal_type="&type=main course"
     if options[1] == 2:
         meal_type="&type=dessert"
+    
+    specialsearch=False
+    if options[0] != "0" or options[1] != "0":
+        specialsearch=True
 
     spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number=20" )
     spooncacular_response_data = json.loads(spooncacular_response.text)
@@ -70,13 +74,14 @@ def spooncalcular_search(query_string, options="00"):
             else:
                 recipe['link'] = ""
             response_data['results'].append(recipe)
-        for recipe in edamam_response_data['hits']:
-            edamam_recipe = {}
-            edamam_recipe['link'] = recipe['recipe']['url']
-            edamam_recipe['id'] = 0
-            edamam_recipe['title'] = recipe['recipe']['label']
-            edamam_recipe['image'] = recipe['recipe']['image']
-            response_data['results'].append(edamam_recipe)
+        if not specialsearch:
+            for recipe in edamam_response_data['hits']:
+                edamam_recipe = {}
+                edamam_recipe['link'] = recipe['recipe']['url']
+                edamam_recipe['id'] = 0
+                edamam_recipe['title'] = recipe['recipe']['label']
+                edamam_recipe['image'] = recipe['recipe']['image']
+                response_data['results'].append(edamam_recipe)
 
     except Exception as e:
         print("ERROR: "+ str(e))
