@@ -102,7 +102,7 @@ export default function BasicTable() {
             fetch("http://localhost:5000//search_ingredient/" + state.searchInput)
             .then((response) => {return response.json()})
             .then((json) => {
-                console.log("fasz")
+               
                 console.log(json)
                 setState({
                     ...state,
