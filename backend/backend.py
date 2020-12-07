@@ -99,6 +99,8 @@ def spooncalcular_detail(object_id):
 @app.route('/search_ingredient/<ingredients>')
 def spooncalcular_search_ingredients(ingredients):
 
+    ingredients = str(ingredients).replace(" ,", ",").replace(" ", ",")
+
     spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
     spooncacular_response_data = json.loads(spooncacular_response.text)
     response_data = {'results':[]}
