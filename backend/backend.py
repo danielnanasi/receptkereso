@@ -99,11 +99,14 @@ def spooncalcular_detail(object_id):
 @app.route('/search_ingredient/<ingredients>')
 def spooncalcular_search_ingredients(ingredients):
 
-    spooncacular_response_data = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+    ingredients = str(ingredients).replace(" ,", ",").replace(" ", ",")
+
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+    spooncacular_response_data = json.loads(spooncacular_response.text)
     response_data = {'results':[]}
 
     try:
-        for recipe in spooncacular_response_data['results']:
+        for recipe in spooncacular_response_data:
             if True:
                 recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true" + "&number=40")
                 recipe_json = json.loads(recipe_info.text)
