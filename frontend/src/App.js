@@ -2,7 +2,7 @@
 import './App.css';
 
 
-import BasicTable from './search2';
+import BasicTable from './search';
 
 
 
