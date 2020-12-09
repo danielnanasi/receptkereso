@@ -49,8 +49,8 @@ const StyledTableCell = withStyles((theme) => ({
   }))(TableCell);
 
 
-function createData(id, title, image) {
-  return { id, title, image };
+function createData(id, title, image, link) {
+  return { id, title, image, link };
 }
 
 export default function BasicTable() {
@@ -88,6 +88,7 @@ export default function BasicTable() {
             fetch("http://localhost:5000/search/" + state.searchInput + '/' + options)
                 .then((response) => {return response.json()})
                 .then((json) => {
+                    console.log("response")
                     console.log(json)
                     setState({
                     ...state,
@@ -102,7 +103,7 @@ export default function BasicTable() {
             fetch("http://localhost:5000//search_ingredient/" + state.searchInput)
             .then((response) => {return response.json()})
             .then((json) => {
-               
+                
                 console.log(json)
                 setState({
                     ...state,
@@ -121,8 +122,12 @@ export default function BasicTable() {
     if (state.response["results"]!= null ){
       if (state.response["results"][0]!= undefined ){
         for (var i=0; i < state.response["results"].length; i++){
-          rows2[i]= createData(state.response["results"][i],state.response["results"][i].title,state.response["results"][i].image);
-  }}}}
+          rows2[i]= createData(state.response["results"][i],state.response["results"][i].title,state.response["results"][i].image,state.response["results"][i].link);
+         
+        }
+        console.log("rows2")
+        console.log(rows2)
+}}}
 
   const handleChangeCheckbox = (event) => {
       console.log(state.checkedB)
@@ -216,7 +221,7 @@ return (
                     </Typography>
                 </CardContent>
                 <CardActions  className={classes.cardActions}>
-                    <Button style={{margin:"auto"}} size="small" color="primary" variant="outlined" href={card.link}>
+                    <Button style={{margin:"auto"}} size="small" color="primary" variant="outlined" href={card.link} target="_blank">
                         View
                     </Button>
                 </CardActions>
