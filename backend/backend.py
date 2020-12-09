@@ -53,13 +53,13 @@ def spooncalcular_search(query_string, options="00"):
     if options[0] != "0" or options[1] != "0":
         specialsearch=True
 
-    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number=20" )
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number=5" )
     spooncacular_response_data = json.loads(spooncacular_response.text)
 
     params = (
         ("q", query_string),
         ("from", "0"),
-        ("to", "20"),
+        ("to", "31"),
     ) + edamam_ids
 
     edamam_response = requests.get('https://api.edamam.com/search', params = params)
@@ -101,14 +101,14 @@ def spooncalcular_search_ingredients(ingredients):
 
     ingredients = str(ingredients).replace(" ,", ",").replace(" ", ",")
 
-    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients))
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients)+ "&number=15")
     spooncacular_response_data = json.loads(spooncacular_response.text)
     response_data = {'results':[]}
 
     try:
         for recipe in spooncacular_response_data:
             if True:
-                recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true" + "&number=40")
+                recipe_info = requests.get("https://api.spoonacular.com/recipes/"+str(recipe['id'])+"/information?"+spooncalcular_api_key+"&includeNutrition=true")
                 recipe_json = json.loads(recipe_info.text)
                 recipe['link'] = recipe_json['sourceUrl']
             else:
