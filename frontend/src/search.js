@@ -141,7 +141,7 @@ return (
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Receptkereső
+              Ultimate recipe search engine
             </Typography>
           </Container>
         </div>
@@ -153,7 +153,7 @@ return (
               name: 'searchInput',
           }}/>
         <FormControl className={classes2.formControl} >
-        <InputLabel htmlFor="dish">Ételek</InputLabel>
+        <InputLabel htmlFor="dish">Dish types</InputLabel>
         <Select
           native
           disabled={state.checkedB}
@@ -165,14 +165,14 @@ return (
           }}
         >
           <option aria-label="None" value={"0"} />
-          <option value={"1"}>Leves</option>
-          <option value={"2"}>Főétel</option>
-          <option value={"3"}>Desszert</option>
+          <option value={"1"}>Soup</option>
+          <option value={"2"}>Main</option>
+          <option value={"3"}>Dessert</option>
         </Select>
         </FormControl>
 
         <FormControl className={classes2.formControl} >
-        <InputLabel htmlFor="allergene">Allergének</InputLabel>
+        <InputLabel htmlFor="allergene">Alergies</InputLabel>
         <Select
           native
           disabled={state.checkedB}
@@ -184,9 +184,9 @@ return (
           }}
         >
           <option aria-label="None" value={"0"} />
-          <option value={"1"}>Vegetáriánus</option>
-          <option value={"2"}>Gluténmentes</option>
-          <option value={"3"}>Cukormentes</option>
+          <option value={"1"}>Vegetarian</option>
+          <option value={"2"}>Gluten free</option>
+          <option value={"3"}>Sugar free</option>
         </Select>
       </FormControl>
 
@@ -200,7 +200,7 @@ return (
             
           />
         }
-        label="Keresés hozzávalók alapján" 
+        label="Search by ingredient" 
       />
       <Button type= "submit" style={{width: 40, marginTop:35}} color="primary" >Search</Button>
     </form>
