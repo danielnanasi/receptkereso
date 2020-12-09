@@ -49,11 +49,13 @@ def spooncalcular_search(query_string, options="00"):
     if options[1] == 2:
         meal_type="&type=dessert"
     
+    nu=5
     specialsearch=False
     if options[0] != "0" or options[1] != "0":
         specialsearch=True
+        nu=15
 
-    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number=5" )
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/complexSearch?"+spooncalcular_api_key + query + special + meal_type + "&number="+str(nu) )
     spooncacular_response_data = json.loads(spooncacular_response.text)
 
     params = (
@@ -101,7 +103,7 @@ def spooncalcular_search_ingredients(ingredients):
 
     ingredients = str(ingredients).replace(" ,", ",").replace(" ", ",")
 
-    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients)+ "&number=15")
+    spooncacular_response = requests.get("https://api.spoonacular.com/recipes/findByIngredients?"+spooncalcular_api_key +"&ingredients="+str(ingredients)+ "&number=20")
     spooncacular_response_data = json.loads(spooncacular_response.text)
     response_data = {'results':[]}
 
